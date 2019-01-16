@@ -29,6 +29,7 @@ public class TheadIO {
     public bool ReadFile() {
         Sr = new StreamReader(FilePath);
         DataStruct dataStruct = new DataStruct();
+        dataStruct.Points = new List<Vector3>(20000);
         //取每个文件前四行 文件头
         for (int i = 0; i < 4; i++) {
             if ((DataLine = Sr.ReadLine()) != null) {
@@ -60,7 +61,7 @@ public class TheadIO {
                 DataLine = new Regex("[\\s]+").Replace(DataLine, " ");
                 string[] DataSplit = DataLine.Split(' ');
                 if (IsNODE) {
-                    dataStruct.Points.Add(new Vector3(Convert.ToSingle(DataSplit[1]), Convert.ToSingle(DataSplit[2]), Convert.ToSingle(DataSplit[3])));
+                    dataStruct.Points[Convert.ToInt32(DataSplit[0])] = (new Vector3(Convert.ToSingle(DataSplit[1]), Convert.ToSingle(DataSplit[2]), Convert.ToSingle(DataSplit[3])));
                     Debug.Log(dataStruct.Points.Count);
                 }
                 if (IsELEMENT_SHELL) {
@@ -77,13 +78,5 @@ public class TheadIO {
         Sr.Close();
         Sr.Dispose();
         return true;
-    }
-
-    public void ReadFirstFrame() {
-        while ((DataLine = Sr.ReadLine()) != null) {
-            if (DataLine.Contains("*ELEMENT_SHELL")) {
-                Debug.Log(DataLine);
-            }
-        }
     }
 }
