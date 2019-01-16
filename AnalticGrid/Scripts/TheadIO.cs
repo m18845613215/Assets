@@ -68,7 +68,7 @@ public class TheadIO {
                     dataStruct.PointRelation.AddRange(new int[]{ Convert.ToInt32(DataSplit[2]),
                                                                  Convert.ToInt32(DataSplit[3]),
                                                                  Convert.ToInt32(DataSplit[4]),
-                                                                 Convert.ToInt32(DataSplit[3]),
+                                                                 Convert.ToInt32(DataSplit[2]),
                                                                  Convert.ToInt32(DataSplit[4]),
                                                                  Convert.ToInt32(DataSplit[5]) });
                 }
