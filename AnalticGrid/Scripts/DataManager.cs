@@ -9,9 +9,8 @@ public class DataManager: Singleton<DataManager> {
     /// <summary>
     /// 网格数据 结构体
     /// </summary>
-    public List<DataStruct> dataStruct;
+    public List<DataStruct> dataStruct = new List<DataStruct>();
     public override void Awake() {
         base.Awake();
-        dataStruct = new List<DataStruct>();
     }
 }
