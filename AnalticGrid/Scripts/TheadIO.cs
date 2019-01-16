@@ -26,8 +26,8 @@ public class TheadIO {
     /// <summary>
     /// 读取文件
     /// </summary>
-    public bool ReadFile() {
-        Sr = new StreamReader(FilePath);
+    public bool ReadFile(string Path) {
+        Sr = new StreamReader(Path);
         DataStruct dataStruct = new DataStruct();
         dataStruct.Points = new List<Vector3>(new Vector3[20000]);
         //取每个文件前四行 文件头
