@@ -17,35 +17,22 @@ public class TheadIO {
     private DataManager dataManager;
     private StreamReader Sr;
     private string DataLine;
+    private bool IsNODE;
+    private bool IsELEMENT_SHELL;
 
-    /// <summary>
-    /// 调用存储
-    /// </summary>
-    private Action CallSet;
-
-    struct Node {
-        public string[] node;
-        public List<string> data;
-    }
-
-    public void InitPath(string path)
-    {
+    public void InitPath(string path) {
         FilePath = path;
     }
     /// <summary>
     /// 读取文件
     /// </summary>
-    public bool ReadFile()
-    {
+    public bool ReadFile() {
         Sr = new StreamReader(FilePath);
         DataStruct dataStruct = new DataStruct();
         //取每个文件前四行 文件头
-        for (int i = 0; i < 4; i++)
-        {
-            if ((DataLine = Sr.ReadLine()) != null)
-            {
-                if (DataLine.Contains("$STATE_NO"))
-                {
+        for (int i = 0; i < 4; i++) {
+            if ((DataLine = Sr.ReadLine()) != null) {
+                if (DataLine.Contains("$STATE_NO")) {
                     string[] index = DataLine.Split('=');
                     dataStruct.Index = Convert.ToInt32(index[index.Length - 1]);
                     Debug.Log("Index  :" + dataStruct.Index);
@@ -53,36 +40,46 @@ public class TheadIO {
             }
         }
 
-        while (true)
-        {
+        while (true) {
             if ((DataLine = Sr.ReadLine()) == null)
                 break;
-
-            if (DataLine.Contains("*"))
-            {
-                if (DataLine.Contains("NODE"))
+            if (DataLine.Contains("*") || DataLine.Contains("$")) {
+                IsELEMENT_SHELL = false;
+                IsNODE = false;
+                if (DataLine == "*NODE") {
                     Debug.Log(DataLine);
-                CallSet += 
+                    IsNODE = true;
+                }
+                else if (DataLine == ("*ELEMENT_SHELL")) {
+                    Debug.Log(DataLine);
+                    IsELEMENT_SHELL = true;
+                }
             }
-            else
-            {
+            else {
                 DataLine = DataLine.Trim();
                 DataLine = new Regex("[\\s]+").Replace(DataLine, " ");
                 string[] DataSplit = DataLine.Split(' ');
-                dataStruct.Points.Add(new Vector3(Convert.ToSingle(DataSplit[1]), Convert.ToSingle(DataSplit[2]), Convert.ToSingle(DataSplit[3])));
-                Debug.Log(dataStruct.Points.Count);
+                if (IsNODE) {
+                    dataStruct.Points.Add(new Vector3(Convert.ToSingle(DataSplit[1]), Convert.ToSingle(DataSplit[2]), Convert.ToSingle(DataSplit[3])));
+                    Debug.Log(dataStruct.Points.Count);
+                }
+                if (IsELEMENT_SHELL) {
+                    dataStruct.PointRelation.AddRange(new int[]{ Convert.ToInt32(DataSplit[2]),
+                                                                 Convert.ToInt32(DataSplit[3]),
+                                                                 Convert.ToInt32(DataSplit[4]),
+                                                                 Convert.ToInt32(DataSplit[5]) });
+                }
             }
+
         }
         Sr.Close();
         Sr.Dispose();
         return true;
     }
-    public void ReadFirstFrame()
-    {
-        while ((DataLine = Sr.ReadLine()) != null)
-        {
-            if (DataLine.Contains("*ELEMENT_SHELL"))
-            {
+
+    public void ReadFirstFrame() {
+        while ((DataLine = Sr.ReadLine()) != null) {
+            if (DataLine.Contains("*ELEMENT_SHELL")) {
                 Debug.Log(DataLine);
             }
         }

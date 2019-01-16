@@ -10,7 +10,7 @@ public class DataStruct {
     /// <summary>
     /// 点关系
     /// </summary>
-    public List<int> PointRelation = new List<int>();
+    public List<int> PointRelation  = new List<int>();
     /// <summary>
     /// 点数量
     /// </summary>
