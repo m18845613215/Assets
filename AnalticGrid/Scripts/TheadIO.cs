@@ -5,12 +5,12 @@ using System.Threading;
 using System.IO;
 using System.Text;
 using System;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// 多线程 文件读取 
 /// </summary>
-public class TheadIO
-{
+public class TheadIO {
 
     public string FilePath;
     public string FileName;
@@ -18,8 +18,12 @@ public class TheadIO
     private StreamReader Sr;
     private string DataLine;
 
-    struct Node
-    {
+    /// <summary>
+    /// 调用存储
+    /// </summary>
+    private Action CallSet;
+
+    struct Node {
         public string[] node;
         public List<string> data;
     }
@@ -48,9 +52,7 @@ public class TheadIO
                 }
             }
         }
-        //填入数据
-        Node m_node;
-        m_node.data = new List<string>();
+
         while (true)
         {
             if ((DataLine = Sr.ReadLine()) == null)
@@ -60,23 +62,15 @@ public class TheadIO
             {
                 if (DataLine.Contains("NODE"))
                     Debug.Log(DataLine);
+                CallSet += 
             }
             else
             {
                 DataLine = DataLine.Trim();
-                string[] Data = DataLine.Split(' ');
-                for (int i = 0; i < Data.Length; i++)
-                {
-                    if (Data[i] != "")
-                        m_node.data.Add(Data[i]);
-                }
-                Debug.Log(m_node.data[0]);
-                Debug.Log(m_node.data[1]);
-                Debug.Log(m_node.data[2]);
-                Debug.Log(m_node.data[3]);
-                //Debug.Log(m_node.data[0]);
-                Sr.Close();
-                Sr.Dispose();
+                DataLine = new Regex("[\\s]+").Replace(DataLine, " ");
+                string[] DataSplit = DataLine.Split(' ');
+                dataStruct.Points.Add(new Vector3(Convert.ToSingle(DataSplit[1]), Convert.ToSingle(DataSplit[2]), Convert.ToSingle(DataSplit[3])));
+                Debug.Log(dataStruct.Points.Count);
             }
         }
         Sr.Close();
