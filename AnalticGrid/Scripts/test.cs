@@ -4,7 +4,8 @@ using UnityEngine;
 using System.IO;
 
 [ExecuteInEditMode]
-public class test: MonoBehaviour {
+public class test : MonoBehaviour
+{
 
     //private TheadIO thead;
     //public string filename;
@@ -22,37 +23,38 @@ public class test: MonoBehaviour {
     public void Awake()
     {
         thead = new TheadIO();
-        List<FileInfo> fileinfo = new List<FileInfo>();
+
         string fullPath = "Assets/StreamingAssets" + "/";  //路径
 
-        //获取指定路径下面的所有资源文件
-        if (Directory.Exists(fullPath))
-        {
 
-            DirectoryInfo direction = new DirectoryInfo(fullPath);
-            FileInfo[] files = direction.GetFiles("*", SearchOption.AllDirectories);
-            string a = Application.streamingAssetsPath;
-            for (int i = 0; i < files.Length; i++)
+        if (DataManager.Instance.dataStruct != null)
+        {
+            //获取指定路径下面的所有资源文件
+            if (Directory.Exists(fullPath))
             {
-                if (!files[i].Name.Contains("meta"))
+
+                DirectoryInfo direction = new DirectoryInfo(fullPath);
+                FileInfo[] files = direction.GetFiles("*", SearchOption.AllDirectories);
+                FileInfo[] fileinfo = new FileInfo[files.Length / 2];
+                string a = Application.streamingAssetsPath;
+                for (int i = 0; i < files.Length; i++) //排序文件
                 {
-                    thead.ReadFile(Application.streamingAssetsPath + "/" + files[i].Name);
+                    if (!files[i].Name.Contains("meta"))
+                    {
+                        string name = files[i].Name.Remove(0, 4);
+                        int index = int.Parse(name);
+                        fileinfo[index-1] = files[i];
+                    }
+                }
+
+                for (int i = 0; i < fileinfo.Length; i++) //解析文件
+                {
+                    thead.FilePath = Application.streamingAssetsPath + "/" + fileinfo[i].Name;
+                    thead.FileName = fileinfo[i].Name;
+                    thead.ReadFile();
                 }
             }
-            Debug.Log(files.Length);
-
-
-
-            //for (int i = 0; i < files.Length; i++)
-            //{
-            //    if (files[i].Name.EndsWith(".meta"))
-            //    {
-            //        continue;
-            //    }
-            //    Debug.Log("Name:" + files[i].Name);  //打印出来这个文件架下的所有文件
-            //    //Debug.Log( "FullName:" + files[i].FullName );  
-            //    //Debug.Log( "DirectoryName:" + files[i].DirectoryName );  
-            //}
+          
         }
     }
 }

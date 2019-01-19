@@ -3,41 +3,65 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MeshRender : MonoBehaviour {
-
+    private int m_number;
 	// Use this for initialization
 	void Start () {
-        Mesh mesh = new Mesh();
+        m_number = 0;
         DataManager dataManager = DataManager.Instance;
-        mesh.vertices = dataManager.dataStruct[0].Points.ToArray();
-        //int[] indices = new int[15];
-        //indices[0] = 1;
-        //indices[1] = 3;
-        //indices[2] = 15;
+        Mesh mesh = new Mesh();
 
-        //indices[3] = 3;
-        //indices[4] = 15;
-        //indices[5] = 12;
-
-        //indices[6] = 3;
-        //indices[7] = 4;
-        //indices[8] = 18;
-
-        //indices[9] = 4;
-        //indices[10] = 18;
-        //indices[11] = 15;
-
-        //indices[12] = 4;
-        //indices[13] = 2;
-        //indices[14] = 6;
-        //mesh.triangles = indices;
+        mesh.vertices = dataManager.dataStruct[4].Points.ToArray();
         mesh.triangles = DataManager.Instance.dataStruct[0].PointRelation.ToArray();
 
         MeshFilter meshfilter = this.gameObject.GetComponent<MeshFilter>();
         meshfilter.mesh = mesh;
+        Debug.Log(dataManager.dataStruct[0].FileName);
     }
 
     // Update is called once per frame
     void Update () {
-		
-	}
+        //if (Input.GetKeyDown(KeyCode.A))
+        //{
+        //    Mesh_U();
+        //}
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    Mesh_D();
+        //}
+    }
+
+    public void Mesh_U()
+    {
+        DataManager dataManager = DataManager.Instance;
+        m_number -= 1;
+        if (m_number < 0)  { m_number = 0; }
+
+        Debug.Log("加载" + dataManager.dataStruct[m_number].FileName);
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = dataManager.dataStruct[m_number].Points.ToArray();
+        mesh.triangles = DataManager.Instance.dataStruct[0].PointRelation.ToArray();
+        MeshFilter meshfilter = this.gameObject.GetComponent<MeshFilter>();
+        meshfilter.mesh = mesh;
+
+        Debug.Log(dataManager.dataStruct[m_number].FileName);
+    }
+
+    public void Mesh_D()
+    {
+        DataManager dataManager = DataManager.Instance;
+        m_number += 1;
+        if (m_number > DataManager.Instance.dataStruct.Count)  { m_number = DataManager.Instance.dataStruct.Count; }
+
+        Debug.Log("加载" + dataManager.dataStruct[m_number].FileName);
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = dataManager.dataStruct[m_number].Points.ToArray();
+        mesh.triangles = DataManager.Instance.dataStruct[0].PointRelation.ToArray();
+        MeshFilter meshfilter = this.gameObject.GetComponent<MeshFilter>();
+        meshfilter.mesh = mesh;
+
+        Debug.Log(dataManager.dataStruct[m_number].FileName);
+    }
+
 }

@@ -19,17 +19,28 @@ public class TheadIO {
     private string DataLine;
     private bool IsNODE;
     private bool IsELEMENT_SHELL;
+    Thread thread;
 
     public void InitPath(string path) {
         FilePath = path;
     }
+
+    public void Thread()
+    {
+        //thread = new Thread(ReadFile);
+        //thread.Start();
+    }
+
     /// <summary>
     /// 读取文件
     /// </summary>
-    public bool ReadFile(string Path) {
-        Sr = new StreamReader(Path);
+   public void ReadFile() {
+        Sr = new StreamReader(FilePath);
         DataStruct dataStruct = new DataStruct();
         dataStruct.Points = new List<Vector3>(new Vector3[20000]);
+
+        dataStruct.FilePath = FilePath;
+        dataStruct.FileName = FileName;
         //取每个文件前四行 文件头
         for (int i = 0; i < 4; i++) {
             if ((DataLine = Sr.ReadLine()) != null) {
@@ -78,6 +89,5 @@ public class TheadIO {
         Sr.Close();
         Sr.Dispose();
         DataManager.Instance.dataStruct.Add(dataStruct);
-        return true;
     }
 }
